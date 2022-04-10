@@ -85,8 +85,18 @@ container.innerHTML = cardHTML;
 //ARRUMAR OS CARDS  /\ /\ //
 // game \/ \/ //
 const cards = document.querySelectorAll(".card");
-cards.forEach((card) => card.addEventListener("click", flipCard));
+
+function unlocked() {
+  cards.forEach((card) => card.addEventListener("click", flipCard));
+}
+function locked(){
+  cards.forEach((card) => card.removeEventListener("click", flipCard));
+}
+unlocked();
+
 let contador = 0;
+let clicadas = 0;
+let pontos = 0;
 let primeira, segunda;
 
 function flipCard() {
@@ -97,21 +107,33 @@ function flipCard() {
 
   if (contador === 1) {
     primeira = this;
+    clicadas++;
     primeira.removeEventListener("click", flipCard);
   }
   if (contador === 2) {
     segunda = this;
+    clicadas++;
     segunda.removeEventListener("click", flipCard);
     contador = 0;
+    console.log(clicadas);
+    console.log(pontos);
   }
   checar();
 }
 
 function checar() {
   if (primeira !== undefined && segunda !== undefined) {
+    locked();
     if (primeira.dataset.card === segunda.dataset.card) {
+      unlocked();
+      console.log(primeira);
+      console.log(segunda);
+      primeira.removeEventListener("click", flipCard);
+      segunda.removeEventListener("click", flipCard);
       primeira = undefined;
       segunda = undefined;
+      pontos+=2;
+      win();
     } else {
       reflip();
     }
@@ -119,8 +141,6 @@ function checar() {
 }
 function reflip() {
   setTimeout(() => {
-    console.log(primeira);
-    console.log(segunda);
     primeira.classList.remove("flip");
     segunda.classList.remove("flip");
     primeira.children[0].classList.add("none");
@@ -131,5 +151,33 @@ function reflip() {
     segunda.addEventListener("click", flipCard);
     primeira = undefined;
     segunda = undefined;
+    unlocked();
   }, 1000);
+}
+
+// vitoria e replay //
+
+function win(){
+  if(pontos === quantas){
+    let resposta = prompt("Parabens você ganhou em "+clicadas+" jogadas quer jogar de novo?");
+    while(true){
+      if(resposta === "sim"){
+        replay();
+        break;
+      }
+      if(resposta === "não"){
+        break;
+      }
+      resposta = prompt("insira uma resposta valida por favor, responda com sim ou não, você quer jogar novamente ?");
+    }
+  }
+}
+function replay(){
+  unlocked();
+  cards.forEach((card) => card.classList.remove("flip"));
+  cards.forEach((card) => card.children[1].classList.remove("none"));
+  cards.forEach((card) => card.children[0].classList.add("none"));
+  contador = 0;
+  clicadas = 0;
+  pontos = 0;
 }
