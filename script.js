@@ -38,3 +38,48 @@ if (quantas < 3 || quantas > 14 || quantas % 2 !== 0) {
 }
 
 // PROMPT //
+// ARRUMAR OS CARDS \/ \/ //
+
+const container = document.querySelector(".container");
+const imgsTotal = [
+  "bobrossparrot.gif",
+  "explodyparrot.gif",
+  "fiestaparrot.gif",
+  "metalparrot.gif",
+  "revertitparrot.gif",
+  "tripletsparrot.gif",
+  "unicornparrot.gif"
+];
+const imgsuteis = [];
+for (let i = 0; i < quantas / 2; i++) {
+  imgsuteis[i] = imgsTotal[i];
+}
+const imgsuteisreal = [];
+for (let i = 0; i < quantas; i++) {
+  if (i % 2 === 0) {
+    imgsuteisreal[i] = imgsuteis[i / 2];
+  } else {
+    imgsuteisreal[i] = imgsuteis[parseInt(i / 2, 10)];
+  }
+}
+
+imgsuteisreal.sort(comparador);
+function comparador() {
+  return Math.random() - 0.5;
+}
+
+let cardHTML = "";
+
+imgsuteisreal.forEach((img) => {
+  cardHTML += `<div class="card" data-card="${img}">
+    <div class="verso">
+      <img src="images/${img}">
+    </div>
+    <div class="frente">  
+      <img class="frente" src="images/front.png"/>
+    </div>  
+  </div>`;
+});
+
+container.innerHTML = cardHTML;
+//ARRUMAR OS CARDS  /\ /\ //
