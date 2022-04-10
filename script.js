@@ -83,3 +83,53 @@ imgsuteisreal.forEach((img) => {
 
 container.innerHTML = cardHTML;
 //ARRUMAR OS CARDS  /\ /\ //
+// game \/ \/ //
+const cards = document.querySelectorAll(".card");
+cards.forEach((card) => card.addEventListener("click", flipCard));
+let contador = 0;
+let primeira, segunda;
+
+function flipCard() {
+  this.classList.add("flip");
+  contador += 1;
+  this.children[1].classList.add("none");
+  this.children[0].classList.remove("none");
+
+  if (contador === 1) {
+    primeira = this;
+    primeira.removeEventListener("click", flipCard);
+  }
+  if (contador === 2) {
+    segunda = this;
+    segunda.removeEventListener("click", flipCard);
+    contador = 0;
+  }
+  checar();
+}
+
+function checar() {
+  if (primeira !== undefined && segunda !== undefined) {
+    if (primeira.dataset.card === segunda.dataset.card) {
+      primeira = undefined;
+      segunda = undefined;
+    } else {
+      reflip();
+    }
+  }
+}
+function reflip() {
+  setTimeout(() => {
+    console.log(primeira);
+    console.log(segunda);
+    primeira.classList.remove("flip");
+    segunda.classList.remove("flip");
+    primeira.children[0].classList.add("none");
+    segunda.children[0].classList.add("none");
+    primeira.children[1].classList.remove("none");
+    segunda.children[1].classList.remove("none");
+    primeira.addEventListener("click", flipCard);
+    segunda.addEventListener("click", flipCard);
+    primeira = undefined;
+    segunda = undefined;
+  }, 1000);
+}
