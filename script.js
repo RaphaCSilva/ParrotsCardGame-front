@@ -1,5 +1,6 @@
 // PROMPT //
 let quantas;
+
 function inicio(){
   quantas = prompt("Com quantas cartas você quer jogar ? (numero par entre 4 e 14 por favor)");
   quantas = parseInt(quantas, 10);
@@ -10,7 +11,7 @@ function inicio(){
     quantas = parseInt(quantas, 10);
   }
 
-  if (quantas < 3 || quantas > 14 || quantas % 2 !== 0) {
+  if (quantas < 4 || quantas > 14 || quantas % 2 !== 0) {
     while (true) {
       alert("por favor, o numero tem que ser par entre 4 e 14");
       quantas = prompt("Com quantas cartas você quer jogar ? (numero par entre 4 e 14 por favor)");
@@ -41,6 +42,36 @@ function inicio(){
 }
 inicio();
 
+//TIMER //
+
+let times = 0;
+let timem = 0;
+let idInterval;
+
+function contar() {
+  idInterval = setInterval(aumentarContador, 1000);
+}
+
+function aumentarContador() {
+  times++;
+  if(times<10 && timem<10){
+    document.querySelector(".timer").innerHTML = ("0"+timem+":0"+times);
+  }
+  if(times>=10 && timem<10){
+    document.querySelector(".timer").innerHTML = ("0"+timem+":"+times);
+  }
+  if(times>=10 && timem>=10){
+    document.querySelector(".timer").innerHTML = (timem+":"+times);
+  }
+  if(times<10 && timem>=10){
+    document.querySelector(".timer").innerHTML = (timem+":0"+times);
+  }
+  if(times === 59){
+    times=-1;
+    timem++;
+  }
+}
+
 // ARRUMAR OS CARDS//
 
 const container = document.querySelector(".container");
@@ -56,22 +87,6 @@ const imgsTotal = [
 let imgsuteis = [];
 let imgsuteisreal = [];
 let cardHTML = "";
-
-let times = 0;
-let timem = 0;
-let idInterval;
-function contar() {
-  idInterval = setInterval(aumentarContador, 1000);
-}
-
-function aumentarContador() {
-  times++;
-  document.querySelector(".timer").innerHTML = (timem+":"+times);
-  if(times === 59){
-    times=0;
-    timem++;
-  }
-}
 
 function embaralhador(){
   cardHTML = "";
@@ -162,7 +177,7 @@ function checar() {
       primeira = undefined;
       segunda = undefined;
       pontos+=2;
-      setTimeout(win,1000);
+      setTimeout(wincheck,1000);
     } else {
       reflip();
     }
@@ -176,8 +191,6 @@ function reflip() {
     segunda.children[0].classList.add("none");
     primeira.children[1].classList.remove("none");
     segunda.children[1].classList.remove("none");
-    primeira.addEventListener("click", flipCard);
-    segunda.addEventListener("click", flipCard);
     primeira = undefined;
     segunda = undefined;
     unlocked();
@@ -187,7 +200,8 @@ function reflip() {
 
 // vitoria e replay //
 
-function win(){
+let resposta;
+function wincheck(){
   if(pontos === quantas){
     if(timem === 0){
       alert("Parabens você ganhou em "+clicadas+" jogadas e " + times + " segundos");
