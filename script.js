@@ -1,22 +1,22 @@
 // PROMPT //
 let quantas;
 function inicio(){
-  quantas = prompt("quantas tu quer (numero par entre 4 e 14 pfvr)");
+  quantas = prompt("Com quantas cartas você quer jogar ? (numero par entre 4 e 14 por favor)");
   quantas = parseInt(quantas, 10);
 
   while (isNaN(quantas)) {
-    alert("isso não é numero");
-    quantas = prompt("quantas tu quer (numero par entre 4 e 14 pfvr)");
+    alert("isso ai não é um numero");
+    quantas = prompt("Com quantas cartas você quer jogar ? (numero par entre 4 e 14 por favor)");
     quantas = parseInt(quantas, 10);
   }
 
   if (quantas < 3 || quantas > 14 || quantas % 2 !== 0) {
     while (true) {
-      alert("perai malandro tem que ser par entre 4 e 14");
-      quantas = prompt("quantas tu quer (numero par entre 4 e 14 pfvr)");
+      alert("por favor, o numero tem que ser par entre 4 e 14");
+      quantas = prompt("Com quantas cartas você quer jogar ? (numero par entre 4 e 14 por favor)");
       quantas = parseInt(quantas, 10);
       if (isNaN(quantas)) {
-        alert("isso ai não é nem numero");
+        alert("isso ai não é um numero");
       }
       if (quantas === 4) {
         break;
@@ -40,8 +40,8 @@ function inicio(){
   }
 }
 inicio();
-// PROMPT //
-// ARRUMAR OS CARDS \/ \/ //
+
+// ARRUMAR OS CARDS//
 
 const container = document.querySelector(".container");
 const imgsTotal = [
@@ -53,12 +53,30 @@ const imgsTotal = [
   "tripletsparrot.gif",
   "unicornparrot.gif"
 ];
-const imgsuteis = [];
-const imgsuteisreal = [];
+let imgsuteis = [];
+let imgsuteisreal = [];
 let cardHTML = "";
+
+let times = 0;
+let timem = 0;
+let idInterval;
+function contar() {
+  idInterval = setInterval(aumentarContador, 1000);
+}
+
+function aumentarContador() {
+  times++;
+  document.querySelector(".timer").innerHTML = (timem+":"+times);
+  if(times === 59){
+    times=0;
+    timem++;
+  }
+}
 
 function embaralhador(){
   cardHTML = "";
+  imgsuteis = [];
+  imgsuteisreal = [];
   for (let i = 0; i < quantas / 2; i++) {
     imgsuteis[i] = imgsTotal[i];
   }
@@ -87,12 +105,12 @@ function embaralhador(){
     </div>`;
   });
   container.innerHTML = cardHTML;
+  contar();
 }
 
 embaralhador();
 
-//ARRUMAR OS CARDS  /\ /\ //
-// game \/ \/ //
+// game//
 let cards = document.querySelectorAll(".card");
 
 function unlocked() {
@@ -115,7 +133,7 @@ let primeira, segunda;
 
 function flipCard() {
   this.classList.add("flip");
-  contador += 1;
+  contador ++;
   this.children[1].classList.add("none");
   this.children[0].classList.remove("none");
 
@@ -138,7 +156,6 @@ function checar() {
     locked();
     if (primeira.dataset.card === segunda.dataset.card) {
       unlocked();
-      
       primeira.classList.add("certa");
       segunda.classList.add("certa");
       certaslocked();
@@ -172,17 +189,28 @@ function reflip() {
 
 function win(){
   if(pontos === quantas){
-    let resposta = prompt("Parabens você ganhou em "+clicadas+" jogadas quer jogar de novo?");
+    if(timem === 0){
+      alert("Parabens você ganhou em "+clicadas+" jogadas e " + times + " segundos");
+    }
+    if(timem === 1){
+      alert("Parabens você ganhou em "+clicadas+" jogadas, "+ timem + " minuto e "+ times + " segundos");
+    }
+    if(timem > 1){
+      alert("Parabens você ganhou em "+clicadas+" jogadas, "+ timem + " minutos e "+ times + " segundos");
+    }
+    clearInterval(idInterval);
+    times = 0;
+    timem = 0;
     while(true){
+      resposta = prompt("Você quer jogar novamente? Responda com sim ou não, por favor.");
       if(resposta === "sim"){
         replay();
-        
         break;
       }
       if(resposta === "não"){
         break;
-      }
-      resposta = prompt("insira uma resposta valida por favor, responda com sim ou não, você quer jogar novamente ?");
+      }  
+      alert("responda com sim ou não");    
     }
   }
 }
